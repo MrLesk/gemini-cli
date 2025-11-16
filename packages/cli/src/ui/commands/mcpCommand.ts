@@ -8,12 +8,12 @@ import type {
   SlashCommand,
   SlashCommandActionReturn,
   CommandContext,
+  MessageActionReturn,
 } from './types.js';
 import { CommandKind } from './types.js';
 import type {
   DiscoveredMCPPrompt,
   DiscoveredMCPResource,
-  MessageActionReturn
 } from '@google/gemini-cli-core';
 import {
   DiscoveredMCPTool,
