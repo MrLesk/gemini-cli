@@ -28,6 +28,7 @@ import {
   populateMcpServerCommand,
 } from './mcp-client.js';
 import type { ToolRegistry } from './tool-registry.js';
+import type { ResourceRegistry } from '../resources/resource-registry.js';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
@@ -75,6 +76,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi.fn().mockReturnValue({ tools: {} }),
         listTools: vi.fn().mockResolvedValue({
           tools: [
@@ -103,13 +105,22 @@ describe('mcp-client', () => {
         sortTools: vi.fn(),
         getMessageBus: vi.fn().mockReturnValue(undefined),
       } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
           command: 'test-command',
         },
         mockedToolRegistry,
-        {} as PromptRegistry,
+        promptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
@@ -129,6 +140,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi.fn().mockReturnValue({ tools: {} }),
 
         listTools: vi.fn().mockResolvedValue({
@@ -169,13 +181,22 @@ describe('mcp-client', () => {
         sortTools: vi.fn(),
         getMessageBus: vi.fn().mockReturnValue(undefined),
       } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
           command: 'test-command',
         },
         mockedToolRegistry,
-        {} as PromptRegistry,
+        promptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
@@ -194,6 +215,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi.fn().mockReturnValue({ prompts: {} }),
         listTools: vi.fn().mockResolvedValue({ tools: [] }),
         listPrompts: vi.fn().mockRejectedValue(new Error('Test error')),
@@ -209,19 +231,28 @@ describe('mcp-client', () => {
         registerTool: vi.fn(),
         getMessageBus: vi.fn().mockReturnValue(undefined),
       } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
           command: 'test-command',
         },
         mockedToolRegistry,
-        {} as PromptRegistry,
+        promptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
       await client.connect();
       await expect(client.discover({} as Config)).rejects.toThrow(
-        'No prompts or tools found on the server.',
+        'No prompts, tools, or resources found on the server.',
       );
       expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
@@ -238,6 +269,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi.fn().mockReturnValue({ prompts: {} }),
         listPrompts: vi.fn().mockResolvedValue({ prompts: [] }),
         request: vi.fn().mockResolvedValue({}),
@@ -253,19 +285,28 @@ describe('mcp-client', () => {
         sortTools: vi.fn(),
         getMessageBus: vi.fn().mockReturnValue(undefined),
       } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
           command: 'test-command',
         },
         mockedToolRegistry,
-        {} as PromptRegistry,
+        promptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
       await client.connect();
       await expect(client.discover({} as Config)).rejects.toThrow(
-        'No prompts or tools found on the server.',
+        'No prompts, tools, or resources found on the server.',
       );
     });
 
@@ -277,6 +318,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi.fn().mockReturnValue({ tools: {} }),
         listTools: vi.fn().mockResolvedValue({
           tools: [
@@ -301,13 +343,22 @@ describe('mcp-client', () => {
         sortTools: vi.fn(),
         getMessageBus: vi.fn().mockReturnValue(undefined),
       } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
           command: 'test-command',
         },
         mockedToolRegistry,
-        {} as PromptRegistry,
+        promptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
@@ -324,6 +375,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi.fn().mockReturnValue({ tools: {} }),
         listTools: vi.fn().mockResolvedValue({
           tools: [
@@ -363,13 +415,22 @@ describe('mcp-client', () => {
         sortTools: vi.fn(),
         getMessageBus: vi.fn().mockReturnValue(undefined),
       } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
           command: 'test-command',
         },
         mockedToolRegistry,
-        {} as PromptRegistry,
+        promptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
@@ -394,6 +455,156 @@ describe('mcp-client', () => {
       });
     });
 
+    it('should discover resources when a server only exposes resources', async () => {
+      const mockedClient = {
+        connect: vi.fn(),
+        discover: vi.fn(),
+        disconnect: vi.fn(),
+        getStatus: vi.fn(),
+        registerCapabilities: vi.fn(),
+        setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
+        getServerCapabilities: vi.fn().mockReturnValue({ resources: {} }),
+        request: vi.fn().mockImplementation(({ method }) => {
+          if (method === 'resources/list') {
+            return Promise.resolve({
+              resources: [
+                {
+                  uri: 'file:///tmp/resource.txt',
+                  name: 'resource',
+                  description: 'Test Resource',
+                  mimeType: 'text/plain',
+                },
+              ],
+            });
+          }
+          return Promise.resolve({ prompts: [] });
+        }),
+      } as unknown as ClientLib.Client;
+      vi.mocked(ClientLib.Client).mockReturnValue(mockedClient);
+      vi.spyOn(SdkClientStdioLib, 'StdioClientTransport').mockReturnValue(
+        {} as SdkClientStdioLib.StdioClientTransport,
+      );
+      const mockedToolRegistry = {
+        registerTool: vi.fn(),
+        sortTools: vi.fn(),
+        getMessageBus: vi.fn().mockReturnValue(undefined),
+      } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
+      const client = new McpClient(
+        'test-server',
+        {
+          command: 'test-command',
+        },
+        mockedToolRegistry,
+        promptRegistry,
+        resourceRegistry,
+        workspaceContext,
+        false,
+      );
+      await client.connect();
+      await client.discover({} as Config);
+      expect(resourceRegistry.setResourcesForServer).toHaveBeenCalledWith(
+        'test-server',
+        [
+          expect.objectContaining({
+            uri: 'file:///tmp/resource.txt',
+            name: 'resource',
+          }),
+        ],
+      );
+    });
+
+    it('refreshes registry when resource list change notification is received', async () => {
+      let listCallCount = 0;
+      let resourceListHandler:
+        | ((notification: unknown) => Promise<void> | void)
+        | undefined;
+      const mockedClient = {
+        connect: vi.fn(),
+        discover: vi.fn(),
+        disconnect: vi.fn(),
+        getStatus: vi.fn(),
+        registerCapabilities: vi.fn(),
+        setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn((_, handler) => {
+          resourceListHandler = handler;
+        }),
+        getServerCapabilities: vi.fn().mockReturnValue({ resources: {} }),
+        request: vi.fn().mockImplementation(({ method }) => {
+          if (method === 'resources/list') {
+            listCallCount += 1;
+            if (listCallCount === 1) {
+              return Promise.resolve({
+                resources: [
+                  {
+                    uri: 'file:///tmp/one.txt',
+                  },
+                ],
+              });
+            }
+            return Promise.resolve({
+              resources: [
+                {
+                  uri: 'file:///tmp/two.txt',
+                },
+              ],
+            });
+          }
+          return Promise.resolve({ prompts: [] });
+        }),
+      } as unknown as ClientLib.Client;
+      vi.mocked(ClientLib.Client).mockReturnValue(mockedClient);
+      vi.spyOn(SdkClientStdioLib, 'StdioClientTransport').mockReturnValue(
+        {} as SdkClientStdioLib.StdioClientTransport,
+      );
+      const mockedToolRegistry = {
+        registerTool: vi.fn(),
+        sortTools: vi.fn(),
+        getMessageBus: vi.fn().mockReturnValue(undefined),
+      } as unknown as ToolRegistry;
+      const promptRegistry = {
+        registerPrompt: vi.fn(),
+        removePromptsByServer: vi.fn(),
+      } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
+      const client = new McpClient(
+        'test-server',
+        {
+          command: 'test-command',
+        },
+        mockedToolRegistry,
+        promptRegistry,
+        resourceRegistry,
+        workspaceContext,
+        false,
+      );
+      await client.connect();
+      await client.discover({} as Config);
+
+      expect(mockedClient.setNotificationHandler).toHaveBeenCalledOnce();
+      expect(resourceListHandler).toBeDefined();
+
+      await resourceListHandler?.({
+        method: 'notifications/resources/list_changed',
+      });
+
+      expect(resourceRegistry.setResourcesForServer).toHaveBeenLastCalledWith(
+        'test-server',
+        [expect.objectContaining({ uri: 'file:///tmp/two.txt' })],
+      );
+    });
+
     it('should remove tools and prompts on disconnect', async () => {
       const mockedClient = {
         connect: vi.fn(),
@@ -401,6 +612,7 @@ describe('mcp-client', () => {
         getStatus: vi.fn(),
         registerCapabilities: vi.fn(),
         setRequestHandler: vi.fn(),
+        setNotificationHandler: vi.fn(),
         getServerCapabilities: vi
           .fn()
           .mockReturnValue({ tools: {}, prompts: {} }),
@@ -436,6 +648,10 @@ describe('mcp-client', () => {
         unregisterPrompt: vi.fn(),
         removePromptsByServer: vi.fn(),
       } as unknown as PromptRegistry;
+      const resourceRegistry = {
+        setResourcesForServer: vi.fn(),
+        removeResourcesByServer: vi.fn(),
+      } as unknown as ResourceRegistry;
       const client = new McpClient(
         'test-server',
         {
@@ -443,6 +659,7 @@ describe('mcp-client', () => {
         },
         mockedToolRegistry,
         mockedPromptRegistry,
+        resourceRegistry,
         workspaceContext,
         false,
       );
@@ -457,6 +674,7 @@ describe('mcp-client', () => {
       expect(mockedClient.close).toHaveBeenCalledOnce();
       expect(mockedToolRegistry.removeMcpToolsByServer).toHaveBeenCalledOnce();
       expect(mockedPromptRegistry.removePromptsByServer).toHaveBeenCalledOnce();
+      expect(resourceRegistry.removeResourcesByServer).toHaveBeenCalledOnce();
     });
   });
   describe('appendMcpServerCommand', () => {
